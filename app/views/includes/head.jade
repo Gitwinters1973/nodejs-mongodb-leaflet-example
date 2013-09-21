@@ -1,0 +1,87 @@
+head
+  meta(charset="utf-8")
+  meta(http-equiv="X-UA-Compatible", content="IE=edge,chrome=1")
+
+  title= pkg.name + ' - ' + title
+  meta(http-equiv="Content-type", content="text/html;charset=UTF-8")
+  meta(name="keywords", content=pkg.keywords.join(","))
+  meta(name="description", content=pkg.description)
+
+  link(href="/favicon.ico", rel="shortcut icon", type="image/x-icon")
+  
+  //- Load some stylesheets
+  link(rel="stylesheet", href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css")
+  link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700")
+  link(rel="stylesheet", href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css")
+  //if lte IE 8
+    link(rel="stylesheet", href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css")
+  link(rel="stylesheet", href="/css/style.css")
+  link(rel="stylesheet", href="/css/MarkerCluster.css")
+  link(rel="stylesheet", href="/css/MarkerCluster.Default.css")
+  //if lte IE 8
+    link(rel="stylesheet", href="/css/MarkerCluster.Default.ie.css")
+
+  //- Load scripts
+  script(src="http://code.jquery.com/jquery-1.9.1.min.js")
+  script(src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js")
+  script(src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js")
+  script(src="/js/leaflet.markercluster-src.js")
+  
+  script.
+    var map = null;
+    var markers = new L.markerClusterGroup();
+    var markersList = [];
+    var shown = false;
+
+    $(document).ready(function(){
+
+        $('.ui-content').css('padding','0');
+        $('#map').height( $(window).height() ); // it will still respect your css, mine uses it up to 85%
+        $('#map').width( $(window).width() ); // as well as height
+        
+        map = L.map('map', {zoomControl: false});
+        
+        map.on('load', function(e) {
+          showMarker();
+        });
+        
+        map.setView([42.620, 12.787], 6);
+
+        L.tileLayer('http://{s}.tile.cloudmade.com/b2607236c487469d9e0ccfd29e1bb7c1/997/256/{z}/{x}/{y}.png', {
+          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+          maxZoom: 18
+        }).addTo(map);
+                
+        map.addLayer(markers);
+
+        map.on('dragend', function(e) {
+          showMarker();
+        });
+        
+        function showMarker(e) {
+          $.get('home/getplaces',{box: [[map.getBounds().getNorthEast().lng,map.getBounds().getNorthEast().lat],[map.getBounds().getSouthWest().lng,map.getBounds().getSouthWest().lat]]},function(data){
+            if(data) {
+              var items = data.items;
+
+              for (m in markersList) {
+                markers.removeLayer(markersList[m]);
+              }
+              
+              markersList = [];
+                            
+              $.each(items, function(i,item){
+                var marker = L.marker([item.loc[1],item.loc[0]]);
+                var htmlPopup = "<b>"+item.name+"</b><br/>";
+                               
+                marker.bindPopup(htmlPopup);
+                markersList.push(marker);
+                markers.addLayer(marker);
+              });              
+            }
+          });
+        }
+        
+        function centermap(itm) {
+          console.log(itm);
+        }
+    });

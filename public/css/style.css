@@ -1,0 +1,54 @@
+html, body {
+			margin: 0;
+			padding: 0;
+			border: none;
+		  height: 100%;
+		  font-family: 'Open Sans', sans-serif;
+}
+
+body {
+  max-height: 768px;
+  background-color: whitesmoke;
+}
+		
+#header {
+  height: 48px;
+  width: 100%;
+  z-index: 1000;
+}
+
+#dsq2 {
+  margin-top: 20px;
+}
+
+table.tooltip-table td {
+  border: 1px dotted black;
+  text-align: center;
+}
+
+
+
+.fixed {
+  background: url(http://static.tumblr.com/njty47g/Omoleufdi/topbar_bg.png) left top repeat-x;
+  position: fixed;left: 0;
+  -webkit-box-shadow: 0 7px 8px rgba(0, 0, 0, 0.12);
+  -moz-box-shadow: 0 7px 8px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 7px 8px rgba(0, 0, 0, 0.12);
+}
+
+.inner {
+  width: 940px;
+  margin: 0 auto;
+  height: 48px;
+}
+
+
+.shadow{
+  width: 100%;
+  height: 5px;
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  z-index: 500;
+  display: none;
+}
